@@ -15,7 +15,7 @@ def index():
     )
 
     return {
-        'color': '#00ff00',
+        'color': '#00ffff',
         'head': head_url
     }
 
@@ -34,15 +34,50 @@ def start():
 @bottle.post('/move')
 def move():
     data = bottle.request.json
-
+    
+    # our snake
+    mysnake = {}
+    for snake in data["snakes"]:
+        if snake["id"] == "3063baf3-a325-4b3f-bfb8-94434de3316d":
+            mysnake = snake
+    
+    #snake head        
+    position = mysnake["coords"][0]
+    
+    
+    def moveCheck(xy):
+        result = False
+        #check for walls
+        if xy[0] > -1 and xy[1] > -1 and xy[0] < data["width"] and xy[1] < data["height"]:
+            result = True
+        result = result and snakeCheck(xy)
+        return result
+    
+    def snakeCheck(xy):
+        result = True
+        for snake in data["snakes"]:
+            for pos in snake["coords"]:
+                if pos[0] == xy[0] and pos[1] == xy[1]:
+                    result = False
+        return result
+        
+    mymove = ""
+    
+    if moveCheck([position[0], position[1] + 1]):
+        mymove = "north"
+    elif moveCheck([position[0], position[1] - 1]):
+        mymove = "south"
+    elif moveCheck([position[0] + 1, position[1]]):
+        mymove = "east"
+    else:
+        mymove = "west"
     # TODO: Do things with data
-
+    
     return {
-        'move': 'north',
+        'move': mymove,
         'taunt': 'battlesnake-python!'
     }
-
-
+    
 @bottle.post('/end')
 def end():
     data = bottle.request.json
@@ -52,6 +87,7 @@ def end():
     return {
         'taunt': 'battlesnake-python!'
     }
+
 
 
 # Expose WSGI app (so gunicorn can find it)

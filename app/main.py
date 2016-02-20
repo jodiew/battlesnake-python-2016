@@ -35,14 +35,11 @@ def start():
 def move():
     data = bottle.request.json
     
-    # our snake
-    mysnake = {}
+    #snake head        
+    position = []
     for snake in data["snakes"]:
         if snake["id"] == "3063baf3-a325-4b3f-bfb8-94434de3316d":
-            mysnake = snake
-    
-    #snake head        
-    position = mysnake["coords"][0]
+            position = snake["coords"][0]
     
     
     def moveCheck(xy):
@@ -63,9 +60,9 @@ def move():
         
     mymove = ""
     
-    if moveCheck([position[0], position[1] + 1]):
+    if moveCheck([position[0], position[1] - 1]):
         mymove = "north"
-    elif moveCheck([position[0], position[1] - 1]):
+    elif moveCheck([position[0], position[1] + 1]):
         mymove = "south"
     elif moveCheck([position[0] + 1, position[1]]):
         mymove = "east"

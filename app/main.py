@@ -57,22 +57,83 @@ def move():
                 if pos[0] == xy[0] and pos[1] == xy[1]:
                     result = False
         return result
+    
+    def distance(xy1,xy2):
+        dis = abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1])
+        return dis
         
+    def closestFood():
+        nearestFood = None
+        lastDistance = 100000
+        for foodInstance in data["food"]:
+            newDistance = distance(position,foodInstance)
+            if newDistance < lastDistance:
+                lastDistance = newDistance
+                nearestFood = foodInstance
+        return nearestFood
+    
+    food = closestFood()
+    
+    def direcPref(food):
+        result = []
+        if food == None:
+            result = ["south", "east", "west", "north"]
+        elif position[0] < food[0]:
+            #move east
+            result = ["east", "south", "west", "north"]
+        elif position[0] > food[0]:
+            #move west
+            result = ["west", "south", "east", "north"]
+        else:
+            if position[1] < food[1]:
+                #move north
+                result = ["south", "east", "north", "west"]
+            elif position[1] < food[1]:
+                #move south
+                result = ["north", "west", "south", "east"]
+            else:
+                result = ["south", "east", "west", "north"]
+        return result
+    
+    def checkDir(direction):
+        result = False
+        if direction == "north":
+            result = moveCheck([position[0], position[1] - 1])
+        elif direction == "south":
+            result = moveCheck([position[0], position[1] + 1])
+        elif direction == "east":
+            result = moveCheck([position[0] + 1, position[1]])
+        else:
+            result = moveCheck([position[0] - 1, position[1]])
+        return result
+    
     mymove = ""
     
-    if moveCheck([position[0], position[1] - 1]):
-        mymove = "north"
-    elif moveCheck([position[0], position[1] + 1]):
-        mymove = "south"
-    elif moveCheck([position[0] + 1, position[1]]):
-        mymove = "east"
+    pref = direcPref(food)
+    
+    if checkDir(pref[0]):
+        mymove = pref[0]
+    elif checkDir(pref[1]):
+        mymove = pref[1]
+    elif checkDir(pref[2]):
+        mymove = pref[2]
     else:
-        mymove = "west"
+        mymove = pref[3]
+        
+    out = ""
+    if food != None:
+        for x in food:
+            out += x + " "
+    else:
+        out += "none "
+    for y in pref:
+        out += y + " "
+    
     # TODO: Do things with data
     
     return {
         'move': mymove,
-        'taunt': 'battlesnake-python!'
+        'taunt': out
     }
     
 @bottle.post('/end')
@@ -82,7 +143,7 @@ def end():
     # TODO: Do things with data
 
     return {
-        'taunt': 'battlesnake-python!'
+        'taunt': 'Thanks for all the fish!'
     }
 
 

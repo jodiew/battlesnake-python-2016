@@ -15,8 +15,8 @@ def index():
     )
 
     return {
-        'color': '#00ffff',
-        'head': head_url
+        'color': '#8ee54b',
+        'head': "http://cdn8.staztic.com/app/a/6551/6551890/hungry-frog-10100000-l-140x140.png"
     }
 
 
@@ -27,7 +27,7 @@ def start():
     # TODO: Do things with data
 
     return {
-        'taunt': 'battlesnake-python!'
+        'taunt': 'Legit ribbit!'
     }
 
 
@@ -80,17 +80,17 @@ def move():
             result = ["south", "east", "west", "north"]
         elif position[0] < food[0]:
             #move east
-            result = ["east", "south", "west", "north"]
+            result = ["east", "south", "north", "west"]
         elif position[0] > food[0]:
             #move west
-            result = ["west", "south", "east", "north"]
+            result = ["west", "north", "south", "east"]
         else:
             if position[1] < food[1]:
-                #move north
-                result = ["south", "east", "north", "west"]
-            elif position[1] < food[1]:
                 #move south
-                result = ["north", "west", "south", "east"]
+                result = ["south", "east", "west", "north"]
+            elif position[1] > food[1]:
+                #move north
+                result = ["north", "west", "east", "south"]
             else:
                 result = ["south", "east", "west", "north"]
         return result
@@ -119,21 +119,12 @@ def move():
         mymove = pref[2]
     else:
         mymove = pref[3]
-        
-    out = ""
-    if food != None:
-        for x in food:
-            out += x + " "
-    else:
-        out += "none "
-    for y in pref:
-        out += y + " "
     
     # TODO: Do things with data
     
     return {
         'move': mymove,
-        'taunt': out
+        'taunt': "Ribbit kill it!!"
     }
     
 @bottle.post('/end')
@@ -143,7 +134,7 @@ def end():
     # TODO: Do things with data
 
     return {
-        'taunt': 'Thanks for all the fish!'
+        'taunt': 'Ribbit killed it!'
     }
 
 
